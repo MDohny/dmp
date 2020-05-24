@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { handleAudioDigits } from "../utils/audio-funcs.js";
 import { useNavigation } from '@react-navigation/native';
 
@@ -17,18 +17,32 @@ export default class PredictScreen extends React.Component {
     
     
     render() {
+        let imageUri = "data:image/png;base64," + this.state.image
     return (
     <View style={styles.container}>
+        <Image
+            source={{ uri: imageUri }}
+            style={styles.image}
+          />
+    
       <TouchableOpacity
       onPress={() => {
-          console.log(this.state.digits)
+          
           handleAudioDigits(this.state.digits, "EN")
           
     }}
-      style={styles.button}
+      style={styles.audiobutton}
       >
         <Text style={styles.buttonText}>
             PLAY THE DIGITS
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+      onPress={() => this.props.navigation.navigate("Home Screen")}
+      style={styles.backbutton}
+      >
+        <Text style={styles.buttonText}>
+            NEW IMAGE
         </Text>
       </TouchableOpacity>
     </View>
@@ -42,17 +56,39 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-    button: {
+    audiobutton: {
       backgroundColor: '#38686A',
       padding: 5,
       width: 200,
       alignItems: 'center',
       justifyContent: 'center',
-      width : "100%"
+      width : "100%", 
+      position: "absolute",
+      bottom:50,
+      height:45
+    },
+    backbutton: {
+      backgroundColor: '#38686A',
+      padding: 5,
+      width: 200,
+      alignItems: 'center',
+      justifyContent: 'center',
+      width : "100%", 
+      position: "absolute",
+      bottom:0,
+      height:45
     },
     buttonText : {
         fontSize : 20,
         color: "#fff"
         
-    }
+    },
+    image: {
+      width: 400,
+      alignItems: 'center',
+      justifyContent: 'center', 
+      position: "absolute",
+      bottom:100,
+      height:520
+    },
 });
