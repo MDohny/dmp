@@ -9,9 +9,11 @@ export async function handleImageTake(){
     var predictedDigits = null;
     
     if (!result.cancelled){
-        await handleUploadImage(result.uri);/*.then((response) => {
-            console.log(response);
-        });*/
+        await handleUploadImage(result.uri).then((response) => {
+            predictedImage = response["imageData"];
+            predictedDigits = response["predictedLabels"];
+            
+        });
         
         //console.log(result);
         
@@ -24,13 +26,13 @@ export async function handleImageTake(){
     }
     return { 
         predictedImage : predictedImage,
-        predictedDigits : predictedDigits,
+        predictedDigits : predictedDigits
     }
     
 }
 
 async function handleUploadImage(imageUri) {
-    let api_url = "http://192.168.43.246:5000/predict";
+    let api_url = "http://10.56.24.107:5000/predict";
     
     let localUri = imageUri;
     let filename = localUri.split('/').pop();
@@ -58,7 +60,8 @@ async function handleUploadImage(imageUri) {
             method: "POST",
             body: formData,
             })
-        console.log(result.json());
+        let json = await result.json();
+        return json
         //axios.post(api_url, formData).then((res) => {console.log(res.json())}) 
     } catch(e) {
         console.log(e);

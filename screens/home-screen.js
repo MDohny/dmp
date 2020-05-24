@@ -10,8 +10,11 @@ export default class HomeScreen extends React.Component {
     return (
     <View style={styles.container}>
       <TouchableOpacity
-      onPress={() => handleImageTake().then(() => {
-          this.props.navigation.navigate("Predict Screen");
+      onPress={() => handleImageTake().then((params) => {
+          this.props.navigation.navigate("Predict Screen", {
+              predictedImage : params.predictedImage,
+              predictedDigits : params.predictedDigits
+        });
     })}
       style={styles.button}
       >

@@ -1,19 +1,30 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { handleAudioDigits } from "../utils/audio-funcs.js";
+import { useNavigation } from '@react-navigation/native';
 
 const dummyDigits = [ "1", "2", "5" ]
 
 export default class PredictScreen extends React.Component {
-    state = {
-        image : null,
+    constructor(props){
+        super(props);
     }
+    
+    state = {
+        image : this.props.route.params.predictedImage,
+        digits : this.props.route.params.predictedDigits
+    }
+    
     
     render() {
     return (
     <View style={styles.container}>
       <TouchableOpacity
-      onPress={() => handleAudioDigits(dummyDigits, "EN")}
+      onPress={() => {
+          console.log(this.state.digits)
+          handleAudioDigits(this.state.digits, "EN")
+          
+    }}
       style={styles.button}
       >
         <Text style={styles.buttonText}>
