@@ -1,12 +1,19 @@
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
+import axios from "axios"
 
 
 export async function handleImageTake(){
     var result = await ImagePicker.launchCameraAsync();
+    var predictedImage = null;
+    var predictedDigits = null;
+    
     if (!result.cancelled){
+        await handleUploadImage(result.uri);/*.then((response) => {
+            console.log(response);
+        });*/
         
-        
+        //console.log(result);
         
         //Clear the cache after uploading
         await FileSystem.deleteAsync(result.uri);
@@ -22,6 +29,41 @@ export async function handleImageTake(){
     
 }
 
-async function handleUploadImage(imageUri, serverURL) {
+async function handleUploadImage(imageUri) {
+    let api_url = "http://192.168.43.246:5000/predict";
     
+    let localUri = imageUri;
+    let filename = localUri.split('/').pop();
+
+    // Infer the type of the image
+    let match = /\.(\w+)$/.exec(filename);
+    let type = match ? `image/${match[1]}` : `image`;
+
+    // Upload the image using the fetch and FormData APIs
+    let formData = new FormData();
+    formData.append('imageToProcess', { uri: localUri, name: filename, type });
+    
+    
+//     const imageToProcess = {
+//         imageUri : imageUri,
+//         type : "image/jpg",
+//         name : "imageToProcess.jpg"   
+//     }
+    
+    //const formData = new FormData();
+    //formData.append("imageToProcess", imageToProcess);
+    
+    try {
+        let result = await fetch(api_url, {
+            method: "POST",
+            body: formData,
+            })
+        console.log(result.json());
+        //axios.post(api_url, formData).then((res) => {console.log(res.json())}) 
+    } catch(e) {
+        console.log(e);
+    }
+    
+ 
+    //fetch(api_url, {method: "POST"}).then((res) => {console.log(res.json())}).catch(e => {console.log(e)})
 }
